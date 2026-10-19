@@ -1,0 +1,12 @@
+{
+  "id": "run-20261019123000-a1b2c3",
+  "command": "node --test tests/",
+  "cwd": "examples/demo-buggy-app",
+  "startedAt": "2026-10-19T12:30:00.000Z",
+  "durationMs": 412,
+  "exitCode": 1,
+  "stdoutTail": "# tests 2\n# pass 1\n# fail 1",
+  "stderrTail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal: 60000 !== 30000",
+  "outputSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "kind": "test"
+}

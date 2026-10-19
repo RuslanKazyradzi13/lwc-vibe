@@ -1,0 +1,57 @@
+{
+  "description": "Expected findings for daily_report.csv + rules.json + history.csv (verified by tests/ops-check.test.mjs)",
+  "rulesApplied": [
+    "OPS-008",
+    "OPS-001",
+    "OPS-002",
+    "OPS-003",
+    "OPS-004",
+    "OPS-005",
+    "OPS-007",
+    "OPS-006"
+  ],
+  "findings": [
+    {
+      "rule": "OPS-001",
+      "row": 4,
+      "severity": "high",
+      "status": "confirmed"
+    },
+    {
+      "rule": "OPS-002",
+      "row": 6,
+      "severity": "high",
+      "status": "confirmed"
+    },
+    {
+      "rule": "OPS-003",
+      "row": 6,
+      "severity": "high",
+      "status": "confirmed"
+    },
+    {
+      "rule": "OPS-004",
+      "row": 3,
+      "severity": "high",
+      "status": "confirmed"
+    },
+    {
+      "rule": "OPS-005",
+      "row": 7,
+      "severity": "high",
+      "status": "confirmed"
+    },
+    {
+      "rule": "OPS-006",
+      "row": null,
+      "severity": "medium",
+      "status": "probable"
+    },
+    {
+      "rule": "OPS-007",
+      "row": 9,
+      "severity": "medium",
+      "status": "confirmed"
+    }
+  ]
+}

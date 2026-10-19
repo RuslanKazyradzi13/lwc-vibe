@@ -1,0 +1,36 @@
+{
+  "lang": "en",
+  "level": "advanced",
+  "testCommand": "npm run test:only",
+  "ignore": [
+    "examples/**",
+    "docs/pdf-build/**",
+    "assets/**"
+  ],
+  "requirementFiles": [
+    "docs/REQUIREMENTS.md"
+  ],
+  "architectureDocs": [
+    "docs/ARCHITECTURE.md"
+  ],
+  "boundaries": [
+    {
+      "from": "src/core/**",
+      "deny": [
+        "src/cli/**"
+      ],
+      "note": "the core does not depend on the CLI"
+    },
+    {
+      "from": "src/analyzers/**",
+      "deny": [
+        "src/cli/**"
+      ],
+      "note": "analyzers do not depend on the CLI"
+    }
+  ],
+  "thresholds": {
+    "maxFanOut": 14,
+    "duplicateMinLines": 8
+  }
+}

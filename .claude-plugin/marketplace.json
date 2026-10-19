@@ -1,0 +1,30 @@
+{
+  "name": "lwc-vibe",
+  "owner": {
+    "name": "Ruslan Kazyradzi",
+    "url": "https://github.com/RuslanKazyradzi13"
+  },
+  "metadata": {
+    "description": "Marketplace for the LWC — vibe plugin: a local AI-development coach with Anomaly Radar.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "lwc-vibe",
+      "source": "./",
+      "description": "AI writes. You decide. LWC verifies. Learn, design, build and review modes plus Anomaly Radar.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Ruslan Kazyradzi"
+      },
+      "license": "MIT",
+      "keywords": [
+        "ai-coding",
+        "anomaly-detection",
+        "claude-code",
+        "kazakhstan"
+      ],
+      "category": "development"
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="780" viewBox="0 0 1200 780" role="img" aria-label="LWC — vibe architecture: Claude Code plugin, CLI, Anomaly Radar core, local .lwc state">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#475569"/>
+    </marker>
+    <marker id="arrT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#0F766E"/>
+    </marker>
+    <style>
+      .t { font-family: "Segoe UI", Inter, Roboto, Arial, sans-serif; fill: #0F172A; }
+      .h { font-size: 17px; font-weight: 700; }
+      .s { font-size: 13px; fill: #475569; }
+      .m { font-size: 13px; font-family: Consolas, "Cascadia Mono", Menlo, monospace; fill: #0F172A; }
+      .box { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.5; }
+      .zone { fill: #F1F5F9; stroke: #CBD5E1; stroke-width: 1.5; stroke-dasharray: 6 4; }
+      .acc { fill: #ECFDF5; stroke: #0F766E; }
+      .warn { fill: #FFFBEB; stroke: #B45309; }
+      .ln { stroke: #475569; stroke-width: 1.8; fill: none; marker-end: url(#arr); }
+      .lnT { stroke: #0F766E; stroke-width: 2; fill: none; marker-end: url(#arrT); }
+    </style>
+  </defs>
+  <rect width="1200" height="780" fill="#F8FAFC" rx="20"/>
+  <text x="40" y="46" class="t" font-size="26" font-weight="700">LWC — vibe architecture</text>
+  <text x="40" y="70" class="t s">A dependency-free local CLI plus a Claude Code plugin on top of it. Nothing is sent over the network.</text>
+
+  <!-- Zone: Claude Code -->
+  <rect x="40" y="100" width="340" height="300" rx="14" class="zone"/>
+  <text x="60" y="128" class="t h">Claude Code (agent)</text>
+  <text x="60" y="148" class="t s">the lwc-vibe plugin</text>
+
+  <rect x="60" y="166" width="300" height="78" rx="10" class="box"/>
+  <text x="76" y="190" class="t" font-size="14" font-weight="600">skills/ — modes</text>
+  <text x="76" y="210" class="t s">learn · design · build · review</text>
+  <text x="76" y="228" class="t s">explain · radar · resume</text>
+
+  <rect x="60" y="256" width="300" height="60" rx="10" class="box acc"/>
+  <text x="76" y="280" class="t" font-size="14" font-weight="600">hooks/session-start.mjs</text>
+  <text x="76" y="300" class="t s">SessionStart → task context into the session</text>
+
+  <rect x="60" y="328" width="300" height="60" rx="10" class="box warn"/>
+  <text x="76" y="352" class="t" font-size="14" font-weight="600">hooks/guard.mjs</text>
+  <text x="76" y="372" class="t s">PreToolUse Edit/Write → ask/deny before the build stage</text>
+
+  <!-- Zone: CLI -->
+  <rect x="430" y="100" width="330" height="300" rx="14" class="zone"/>
+  <text x="450" y="128" class="t h">CLI · bin/lwc.js</text>
+  <text x="450" y="148" class="t s">Node.js ≥ 20, TypeScript → dist/</text>
+
+  <rect x="450" y="166" width="290" height="104" rx="10" class="box"/>
+  <text x="466" y="190" class="t" font-size="14" font-weight="600">Process commands</text>
+  <text x="466" y="210" class="t m">init · status · resume · map</text>
+  <text x="466" y="228" class="t m">task · decision · claim</text>
+  <text x="466" y="246" class="t m">run -- &lt;cmd&gt;  → evidence</text>
+
+  <rect x="450" y="282" width="290" height="104" rx="10" class="box acc"/>
+  <text x="466" y="306" class="t" font-size="14" font-weight="600">Verification commands</text>
+  <text x="466" y="326" class="t m">radar [path] --category --run-tests</text>
+  <text x="466" y="344" class="t m">suppress · explain</text>
+  <text x="466" y="362" class="t m">ops-check &lt;csv&gt; --rules --history</text>
+
+  <!-- Zone: state -->
+  <rect x="810" y="100" width="350" height="300" rx="14" class="zone"/>
+  <text x="830" y="128" class="t h">Local state · .lwc/</text>
+  <text x="830" y="148" class="t s">JSON + Markdown, UTF-8, kept inside the project</text>
+  <g class="t m">
+    <text x="830" y="180">config.json</text><text x="990" y="180" class="t s">language, level, rules</text>
+    <text x="830" y="204">session.json</text><text x="990" y="204" class="t s">task, stage, decisions</text>
+    <text x="830" y="228">evidence/*.json</text><text x="990" y="228" class="t s">command runs</text>
+    <text x="830" y="252">suppressions.json</text><text x="990" y="252" class="t s">suppressions + reasons</text>
+    <text x="830" y="276">journal.md</text><text x="990" y="276" class="t s">decision journal</text>
+    <text x="830" y="300">project-map.md</text><text x="990" y="300" class="t s">project map</text>
+    <text x="830" y="324">reports/</text><text x="990" y="324" class="t s">radar reports</text>
+  </g>
+  <rect x="830" y="344" width="310" height="40" rx="8" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="846" y="369" class="t m">lwc.config.json</text>
+  <text x="990" y="369" class="t s">shared team config (in Git)</text>
+
+  <!-- Core -->
+  <rect x="40" y="440" width="1120" height="300" rx="14" class="zone"/>
+  <text x="60" y="468" class="t h">Core · src/core + src/analyzers</text>
+  <text x="60" y="488" class="t s">runRadar(): scan → analyzers (isolated errors) → de-duplication → suppressions → text / md / json report</text>
+
+  <rect x="60" y="506" width="200" height="70" rx="10" class="box"/>
+  <text x="76" y="530" class="t" font-size="14" font-weight="600">scan.ts</text>
+  <text x="76" y="550" class="t s">files, ignore, lwc-ignore,</text>
+  <text x="76" y="566" class="t s">no symbolic links</text>
+
+  <rect x="280" y="506" width="200" height="70" rx="10" class="box"/>
+  <text x="296" y="530" class="t" font-size="14" font-weight="600">graph.ts · git.ts</text>
+  <text x="296" y="550" class="t s">JS/TS/Py import graph,</text>
+  <text x="296" y="566" class="t s">cycles, exports, git status</text>
+
+  <rect x="500" y="506" width="200" height="70" rx="10" class="box"/>
+  <text x="516" y="530" class="t" font-size="14" font-weight="600">state.ts</text>
+  <text x="516" y="550" class="t s">config layers, session,</text>
+  <text x="516" y="566" class="t s">evidence, journal</text>
+
+  <rect x="720" y="506" width="200" height="70" rx="10" class="box"/>
+  <text x="736" y="530" class="t" font-size="14" font-weight="600">i18n/ en · ru · kk</text>
+  <text x="736" y="550" class="t s">rule and report texts,</text>
+  <text x="736" y="566" class="t s">Unicode word boundaries</text>
+
+  <rect x="940" y="506" width="200" height="70" rx="10" class="box"/>
+  <text x="956" y="530" class="t" font-size="14" font-weight="600">report.ts</text>
+  <text x="956" y="550" class="t s">grouping by category,</text>
+  <text x="956" y="566" class="t s">sorting by severity</text>
+
+  <!-- Analyzers -->
+  <g>
+    <rect x="60" y="600" width="200" height="118" rx="10" class="box acc"/>
+    <text x="76" y="624" class="t" font-size="14" font-weight="600">A · requirements</text>
+    <text x="76" y="644" class="t s">REQ-000…005</text>
+    <text x="76" y="662" class="t s">contradictions, errors,</text>
+    <text x="76" y="678" class="t s">edge cases, measurability,</text>
+    <text x="76" y="694" class="t s">acceptance criteria</text>
+
+    <rect x="280" y="600" width="200" height="118" rx="10" class="box acc"/>
+    <text x="296" y="624" class="t" font-size="14" font-weight="600">B · architecture</text>
+    <text x="296" y="644" class="t s">ARCH-001…005</text>
+    <text x="296" y="662" class="t s">cycles, module boundaries,</text>
+    <text x="296" y="678" class="t s">coupling, documentation,</text>
+    <text x="296" y="694" class="t s">interfaces (git HEAD)</text>
+
+    <rect x="500" y="600" width="200" height="118" rx="10" class="box acc"/>
+    <text x="516" y="624" class="t" font-size="14" font-weight="600">C · implementation</text>
+    <text x="516" y="644" class="t s">IMPL-001…007</text>
+    <text x="516" y="662" class="t s">data, exceptions, conditions,</text>
+    <text x="516" y="678" class="t s">tests, regressions (real run),</text>
+    <text x="516" y="694" class="t s">dead code, duplicates</text>
+
+    <rect x="720" y="600" width="200" height="118" rx="10" class="box acc"/>
+    <text x="736" y="624" class="t" font-size="14" font-weight="600">D · security</text>
+    <text x="736" y="644" class="t s">SEC-001…006</text>
+    <text x="736" y="662" class="t s">secrets, input, auth,</text>
+    <text x="736" y="678" class="t s">files, dependencies,</text>
+    <text x="736" y="694" class="t s">permissions</text>
+
+    <rect x="940" y="600" width="200" height="118" rx="10" class="box acc"/>
+    <text x="956" y="624" class="t" font-size="14" font-weight="600">E · process</text>
+    <text x="956" y="644" class="t s">PROC-001…005</text>
+    <text x="956" y="662" class="t s">code before agreement, claims</text>
+    <text x="956" y="678" class="t s">without evidence, scope,</text>
+    <text x="956" y="694" class="t s">tests, success after failure</text>
+  </g>
+
+  <!-- Arrows -->
+  <path d="M360 205 L450 205" class="ln"/>
+  <path d="M360 286 L410 286 L410 210" class="ln" stroke-dasharray="4 3"/>
+  <path d="M740 218 L810 218" class="ln"/>
+  <path d="M595 400 L595 440" class="lnT"/>
+  <path d="M985 400 L985 440" class="ln" stroke-dasharray="4 3"/>
+  <text x="605" y="426" class="t s">calls</text>
+  <text x="995" y="426" class="t s">reads / writes</text>
+  <text x="376" y="198" class="t s">calls</text>
+  <text x="752" y="211" class="t s">stores</text>
+</svg>

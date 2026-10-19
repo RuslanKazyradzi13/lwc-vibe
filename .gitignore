@@ -1,0 +1,8 @@
+node_modules/
+.build-test/
+*.log
+.DS_Store
+Thumbs.db
+# Локальный контекст LWC в самом репозитории не храним (кроме демонстрационных примеров)
+/.lwc/
+docs/pdf-build/

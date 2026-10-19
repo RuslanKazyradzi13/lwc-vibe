@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (${{ matrix.os }}, node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - name: Static analysis and formatting
+        run: npm run lint
+      - name: Build and verify dist/ is up to date
+        run: npm run check:dist
+      - name: Tests
+        run: npm run test:only
+      - name: Anomaly Radar on the repository itself (examples/ excluded)
+        run: node bin/lwc.js radar --no-journal --fail-on high
+      - name: Anomaly Radar on the demo project (must find the planted defects)
+        run: node bin/lwc.js radar examples/demo-buggy-app --no-journal --format json --out radar-demo.json
+      - name: Operational report check (demo)
+        run: node bin/lwc.js ops-check examples/ops-report/daily_report.csv --rules examples/ops-report/rules.json --history examples/ops-report/history.csv --format json --out ops-demo.json
+      - name: Upload reports
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
+        uses: actions/upload-artifact@v4
+        with:
+          name: radar-reports
+          path: |
+            radar-demo.json
+            ops-demo.json
+
+  links-and-assets:
+    name: links, SVG and PDF
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Local Markdown links exist
+        run: node scripts/check-links.mjs
+      - name: SVG files are valid XML, the PDF is present
+        run: |
+          for f in assets/*.svg; do node -e "const s=require('fs').readFileSync('$f','utf8'); if(!/^<svg[\s\S]*<\/svg>\s*$/.test(s.replace(/^<\?xml[^>]*>\s*/,''))) {console.error('bad svg: $f'); process.exit(1)}"; done
+          test -s "docs/LWC - vibe.pdf" && echo "PDF ok: $(stat -c %s 'docs/LWC - vibe.pdf') bytes"

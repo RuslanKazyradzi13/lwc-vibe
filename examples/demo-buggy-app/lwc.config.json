@@ -1,0 +1,14 @@
+{
+  "lang": "en",
+  "level": "intermediate",
+  "requirementFiles": ["REQUIREMENTS.md"],
+  "architectureDocs": ["docs/ARCHITECTURE.md"],
+  "boundaries": [
+    {
+      "from": "src/ui/**",
+      "deny": ["src/db/**"],
+      "note": "the UI never talks to storage directly — only through services/"
+    }
+  ],
+  "thresholds": { "maxFanOut": 12, "duplicateMinLines": 6 }
+}

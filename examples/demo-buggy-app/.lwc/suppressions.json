@@ -1,0 +1,8 @@
+[
+  {
+    "match": { "rule": "IMPL-006", "file": "src/ui/receipt.js" },
+    "reason": "The receipt functions are called dynamically from an HTML template; static import analysis cannot see that. Example of a suppression with a reason.",
+    "by": "demo",
+    "date": "2026-10-19"
+  }
+]

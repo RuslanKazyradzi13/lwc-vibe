@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "task": {
+    "id": "task-20261019120000-demo01",
+    "title": "Staff discount 20 %",
+    "startedAt": "2026-10-19T12:00:00.000Z",
+    "stage": "review",
+    "scope": ["src/services/discount.js", "tests/**"],
+    "decisions": [
+      {
+        "id": "D1",
+        "text": "The staff discount is a separate function in discount.js and does not touch the loyalty discount",
+        "proposedAt": "2026-10-19T12:05:00.000Z",
+        "confirmedAt": "2026-10-19T12:06:00.000Z",
+        "confirmedBy": "user"
+      }
+    ],
+    "claims": [
+      {
+        "id": "C1",
+        "text": "Implemented, tests pass",
+        "at": "2026-10-19T12:40:00.000Z",
+        "evidence": ".lwc/evidence/run-20261019123000-a1b2c3.json"
+      }
+    ],
+    "baselineChanged": []
+  },
+  "history": []
+}

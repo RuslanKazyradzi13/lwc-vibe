@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-label="Anomaly Radar: five anomaly categories, finding sources and verification statuses">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#475569"/>
+    </marker>
+    <radialGradient id="rg" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#CCFBF1"/>
+      <stop offset="1" stop-color="#F8FAFC"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Segoe UI", Inter, Roboto, Arial, sans-serif; fill: #0F172A; }
+      .s { font-size: 13px; fill: #475569; }
+      .m { font-size: 12.5px; font-family: Consolas, "Cascadia Mono", Menlo, monospace; fill: #0F172A; }
+      .box { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.5; }
+      .ln { stroke: #475569; stroke-width: 2; fill: none; marker-end: url(#ar); }
+      .ring { fill: none; stroke: #0F766E; stroke-opacity: 0.45; stroke-width: 1.5; }
+    </style>
+  </defs>
+  <rect width="1200" height="720" fill="#F8FAFC" rx="20"/>
+  <text x="40" y="46" class="t" font-size="26" font-weight="700">Anomaly Radar: how a finding travels from signal to status</text>
+  <text x="40" y="70" class="t s">Every finding carries a source (where from) and a status (how well confirmed). Model reasoning is never presented as an analysis result.</text>
+
+  <!-- Radar -->
+  <g transform="translate(250 400)">
+    <circle r="230" fill="url(#rg)"/>
+    <circle r="230" class="ring"/>
+    <circle r="175" class="ring"/>
+    <circle r="120" class="ring"/>
+    <circle r="65" class="ring"/>
+    <line x1="-230" y1="0" x2="230" y2="0" stroke="#0F766E" stroke-opacity="0.3"/>
+    <line x1="0" y1="-230" x2="0" y2="230" stroke="#0F766E" stroke-opacity="0.3"/>
+    <line x1="-163" y1="-163" x2="163" y2="163" stroke="#0F766E" stroke-opacity="0.2"/>
+    <line x1="163" y1="-163" x2="-163" y2="163" stroke="#0F766E" stroke-opacity="0.2"/>
+    <path d="M0 0 L230 0 A230 230 0 0 0 71 -219 Z" fill="#2DD4BF" fill-opacity="0.18"/>
+    <circle r="5" fill="#0F766E"/>
+    <g class="t" font-size="13" font-weight="700" fill="#0F766E">
+      <text x="-205" y="-150">A · Requirements</text>
+      <text x="95" y="-150">B · Architecture</text>
+      <text x="90" y="175">C · Implementation</text>
+      <text x="-205" y="175">D · Security</text>
+      <text x="-60" y="252">E · AI process</text>
+    </g>
+    <g>
+      <circle cx="-120" cy="-95" r="8" fill="#F59E0B"/><text x="-120" y="-108" class="t" font-size="11" text-anchor="middle">REQ-001</text>
+      <circle cx="110" cy="-80" r="8" fill="#EF4444"/><text x="110" y="-93" class="t" font-size="11" text-anchor="middle">ARCH-002</text>
+      <circle cx="140" cy="90" r="8" fill="#F59E0B"/><text x="140" y="77" class="t" font-size="11" text-anchor="middle">IMPL-003</text>
+      <circle cx="-95" cy="105" r="8" fill="#DC2626"/><text x="-95" y="92" class="t" font-size="11" text-anchor="middle">SEC-001</text>
+      <circle cx="20" cy="150" r="8" fill="#DC2626"/><text x="20" y="137" class="t" font-size="11" text-anchor="middle">PROC-005</text>
+      <circle cx="40" cy="-40" r="6" fill="#64748B"/><text x="40" y="-52" class="t" font-size="11" text-anchor="middle">IMPL-004</text>
+    </g>
+  </g>
+
+  <!-- Right side: pipeline -->
+  <g>
+    <text x="540" y="118" class="t" font-size="17" font-weight="700">1. Finding source</text>
+    <rect x="540" y="130" width="300" height="118" rx="12" class="box"/>
+    <g class="t s">
+      <text x="556" y="154"><tspan font-weight="700" fill="#0F172A">rule</tspan> — deterministic rule / invariant</text>
+      <text x="556" y="174"><tspan font-weight="700" fill="#0F172A">static-analyzer</tspan> — import graph, exports</text>
+      <text x="556" y="194"><tspan font-weight="700" fill="#0F172A">test</tspan> — a real command run</text>
+      <text x="556" y="214"><tspan font-weight="700" fill="#0F172A">dependency-analysis</tspan> — manifests</text>
+      <text x="556" y="234"><tspan font-weight="700" fill="#0F172A">ai-reasoning</tspan> — agent reasoning (labelled)</text>
+    </g>
+
+    <text x="870" y="118" class="t" font-size="17" font-weight="700">2. Verification status</text>
+    <rect x="870" y="130" width="290" height="118" rx="12" class="box"/>
+    <g class="t s">
+      <text x="886" y="154"><tspan font-weight="700" fill="#B91C1C">confirmed</tspan> — confirmed defect</text>
+      <text x="886" y="174"><tspan font-weight="700" fill="#B45309">probable</tspan> — probable issue</text>
+      <text x="886" y="194"><tspan font-weight="700" fill="#A16207">warning</tspan> — advisory</text>
+      <text x="886" y="214"><tspan font-weight="700" fill="#475569">evidence-gap</tspan> — missing evidence</text>
+      <text x="886" y="234"><tspan font-weight="700" fill="#0F766E">false-positive</tspan> — suppressed with a reason</text>
+    </g>
+
+    <text x="540" y="290" class="t" font-size="17" font-weight="700">3. Fields of every finding</text>
+    <rect x="540" y="302" width="620" height="150" rx="12" class="box"/>
+    <g class="t m">
+      <text x="556" y="326">id          REQ-001-3062e862      category   requirements</text>
+      <text x="556" y="346">severity    high                  status     probable</text>
+      <text x="556" y="366">source      rule                  location   REQUIREMENTS.md:12</text>
+      <text x="556" y="386">observation / explanation / consequence / howToVerify / fix</text>
+      <text x="556" y="406">evidence    .lwc/evidence/run-….json   (link to the evidence)</text>
+      <text x="556" y="426">suppressed  { reason, by, date }       (suppressed findings only)</text>
+    </g>
+
+    <text x="540" y="494" class="t" font-size="17" font-weight="700">4. Severity scale</text>
+    <g>
+      <rect x="540" y="506" width="112" height="34" rx="8" fill="#DC2626"/><text x="596" y="528" class="t" font-size="13" fill="#FFF" text-anchor="middle" font-weight="700">Critical</text>
+      <rect x="662" y="506" width="112" height="34" rx="8" fill="#EA580C"/><text x="718" y="528" class="t" font-size="13" fill="#FFF" text-anchor="middle" font-weight="700">High</text>
+      <rect x="784" y="506" width="112" height="34" rx="8" fill="#D97706"/><text x="840" y="528" class="t" font-size="13" fill="#FFF" text-anchor="middle" font-weight="700">Medium</text>
+      <rect x="906" y="506" width="112" height="34" rx="8" fill="#0891B2"/><text x="962" y="528" class="t" font-size="13" fill="#FFF" text-anchor="middle" font-weight="700">Low</text>
+      <rect x="1028" y="506" width="112" height="34" rx="8" fill="#64748B"/><text x="1084" y="528" class="t" font-size="13" fill="#FFF" text-anchor="middle" font-weight="700">Info</text>
+    </g>
+
+    <text x="540" y="582" class="t" font-size="17" font-weight="700">5. Suppressing false positives</text>
+    <rect x="540" y="594" width="620" height="86" rx="12" fill="#FFFBEB" stroke="#D97706" stroke-width="1.5"/>
+    <text x="556" y="618" class="t m">lwc suppress SEC-001-c245da66 --reason "example key in the docs" --by "Aigerim"</text>
+    <text x="556" y="640" class="t s">A suppressed finding does not disappear: it stays in the report under "Suppressed" with its reason.</text>
+    <text x="556" y="660" class="t s">Suppressed Critical/High findings are highlighted in the summary: critical findings are never hidden silently.</text>
+  </g>
+  <path d="M480 400 L540 400" class="ln" stroke-dasharray="5 4"/>
+</svg>

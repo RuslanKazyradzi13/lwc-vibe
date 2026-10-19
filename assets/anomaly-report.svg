@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-label="Example Anomaly Radar terminal report for the demo project">
+  <defs>
+    <style>
+      .t { font-family: "Segoe UI", Inter, Roboto, Arial, sans-serif; }
+      .m { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 14px; fill: #E2E8F0; }
+      .dim { fill: #94A3B8; }
+      .crit { fill: #F87171; font-weight: 700; }
+      .high { fill: #FB923C; font-weight: 700; }
+      .med { fill: #FBBF24; font-weight: 700; }
+      .low { fill: #38BDF8; font-weight: 700; }
+      .ok { fill: #4ADE80; }
+      .key { fill: #5EEAD4; }
+      .warn { fill: #FCD34D; }
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="#F8FAFC" rx="20"/>
+  <text x="40" y="46" class="t" font-size="26" font-weight="700" fill="#0F172A">Report example: lwc radar examples/demo-buggy-app</text>
+  <text x="40" y="70" class="t" font-size="13" fill="#475569">A fragment of the real output (text format, English). Full format — docs/REPORT_FORMAT.md; md/json examples — examples/.</text>
+
+  <!-- terminal window -->
+  <rect x="40" y="92" width="1120" height="640" rx="14" fill="#0F172A"/>
+  <rect x="40" y="92" width="1120" height="36" rx="14" fill="#1E293B"/>
+  <rect x="40" y="114" width="1120" height="14" fill="#1E293B"/>
+  <circle cx="64" cy="110" r="6" fill="#EF4444"/><circle cx="84" cy="110" r="6" fill="#F59E0B"/><circle cx="104" cy="110" r="6" fill="#22C55E"/>
+  <text x="600" y="115" class="t" font-size="13" fill="#94A3B8" text-anchor="middle">lwc radar — demo-buggy-app</text>
+
+  <g class="m" transform="translate(64 156)">
+    <text y="0"><tspan class="dim">$</tspan> lwc radar examples/demo-buggy-app</text>
+    <text y="26"><tspan class="key">Anomaly Radar report</tspan> · lwc-vibe 0.1.0 · Files scanned: 20 · Analyzers: requirements, architecture, implementation, security, process</text>
+    <text y="52">Summary: Total findings 44</text>
+    <text y="74">  <tspan class="crit">■ Critical: 6</tspan>   <tspan class="high">▲ High: 11</tspan>   <tspan class="med">● Medium: 11</tspan>   <tspan class="low">○ Low: 16</tspan>   <tspan class="dim">· Info: 0</tspan></text>
+
+    <text y="110" class="dim">── A. Requirements (9) ───────────────────────────────────────────────</text>
+    <text y="134"><tspan class="high">▲ [High]</tspan> REQ-001-3062e862  Contradiction between requirements</text>
+    <text y="154" class="dim">    Where: REQUIREMENTS.md:12</text>
+    <text y="174" class="dim">    Observation: "Скидка … должна применяться ко всем позициям" contradicts "Скидка … не должна применяться к позициям со специальной ценой"</text>
+    <text y="194" class="dim">    Status: <tspan class="warn">probable issue</tspan> · Source: rule</text>
+    <text y="214" class="dim">    Recommended fix: Keep one requirement or specify the conditions under which each applies.</text>
+
+    <text y="250" class="dim">── D. Security (14) ──────────────────────────────────────────────────</text>
+    <text y="274"><tspan class="crit">■ [Critical]</tspan> SEC-002-865b349d  Unsafe handling of user input</text>
+    <text y="294" class="dim">    Where: src/api/server.js:39</text>
+    <text y="314" class="dim">    Observation: Shell command built from a string: `execSync(`wkhtmltopdf ./reports/${req.query.date}.html out.pdf`)`</text>
+    <text y="334" class="dim">    Status: <tspan class="warn">probable issue</tspan> · Source: rule</text>
+    <text y="354" class="dim">    Recommended fix: Use parameterised queries, safe APIs (spawn with an argument array, textContent) and validation.</text>
+
+    <text y="390" class="dim">── E. AI development process (1) ─────────────────────────────────────</text>
+    <text y="414"><tspan class="crit">■ [Critical]</tspan> PROC-005-5114eb44  Success claimed although the check failed</text>
+    <text y="434" class="dim">    Observation: The last run of `node --test tests/` exited with code 1, yet claim "Implemented, tests pass" was made afterwards</text>
+    <text y="454" class="dim">    Status: <tspan class="ok">confirmed defect</tspan> · Source: rule · Evidence: .lwc/evidence/run-20261019123000-a1b2c3.json</text>
+    <text y="474" class="dim">    Recommended fix: Fix the problem and rerun the check before claiming success.</text>
+
+    <text y="510">Suppressed: 2</text>
+    <text y="530" class="dim">  ○ IMPL-006-0a625acf Unused export — Suppressed, reason: the receipt functions are called dynamically from an HTML template</text>
+    <text y="560" class="dim">Findings with status "probable issue" and "warning" require manual verification. The source of every finding is stated explicitly.</text>
+  </g>
+</svg>

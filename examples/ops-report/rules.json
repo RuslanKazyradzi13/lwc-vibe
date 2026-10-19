@@ -1,0 +1,77 @@
+{
+  "name": "Daily operational report: pickup-point network (synthetic data, KZT)",
+  "currency": "₸",
+  "required": [
+    "point_id",
+    "date",
+    "orders_count",
+    "revenue_kzt",
+    "cash_kzt",
+    "card_kzt",
+    "opened_at",
+    "closed_at"
+  ],
+  "numericFields": [
+    "orders_count",
+    "revenue_kzt",
+    "cash_kzt",
+    "card_kzt",
+    "refunds_kzt",
+    "avg_ticket_kzt"
+  ],
+  "dateFields": [
+    "opened_at",
+    "closed_at"
+  ],
+  "nonNegative": [
+    "orders_count",
+    "revenue_kzt",
+    "cash_kzt",
+    "card_kzt",
+    "refunds_kzt"
+  ],
+  "totals": [
+    {
+      "total": "revenue_kzt",
+      "parts": [
+        "cash_kzt",
+        "card_kzt"
+      ],
+      "tolerance": 1
+    }
+  ],
+  "uniqueKey": [
+    "point_id",
+    "date"
+  ],
+  "timeSequence": [
+    {
+      "before": "opened_at",
+      "after": "closed_at"
+    }
+  ],
+  "ranges": [
+    {
+      "field": "avg_ticket_kzt",
+      "min": 500,
+      "max": 50000,
+      "severity": "medium"
+    },
+    {
+      "field": "orders_count",
+      "min": 0,
+      "max": 2000,
+      "severity": "low"
+    }
+  ],
+  "spikes": [
+    {
+      "field": "revenue_kzt",
+      "periodField": "date",
+      "window": 7,
+      "maxRatio": 2.5,
+      "aggregate": "sum",
+      "severity": "medium"
+    }
+  ]
+}

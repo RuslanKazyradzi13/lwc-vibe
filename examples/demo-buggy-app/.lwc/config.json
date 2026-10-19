@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "lang": "en",
+  "level": "intermediate",
+  "checkpoints": "normal",
+  "testCommand": "node --test tests/"
+}

@@ -1,0 +1,57 @@
+{
+  "name": "lwc-vibe",
+  "version": "0.1.0",
+  "description": "LWC — vibe (Local Workflow Coach): AI writes, you decide, LWC verifies. A local AI-development coach with Anomaly Radar for Claude Code. EN · RU · KK",
+  "license": "MIT",
+  "author": "Ruslan Kazyradzi",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RuslanKazyradzi13/lwc-vibe.git"
+  },
+  "homepage": "https://github.com/RuslanKazyradzi13/lwc-vibe#readme",
+  "bugs": "https://github.com/RuslanKazyradzi13/lwc-vibe/issues",
+  "keywords": [
+    "ai-coding",
+    "claude-code",
+    "developer-tools",
+    "anomaly-detection",
+    "kazakhstan",
+    "open-source",
+    "code-review",
+    "static-analysis"
+  ],
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "bin": {
+    "lwc": "bin/lwc.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "hooks",
+    "skills",
+    ".claude-plugin",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node scripts/run-tests.mjs",
+    "test:only": "node scripts/run-tests.mjs",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.mjs\" \"hooks/**/*.mjs\" \"bin/*.js\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.mjs\" \"hooks/**/*.mjs\" \"bin/*.js\"",
+    "lint": "npm run typecheck && npm run format:check",
+    "radar:demo": "node bin/lwc.js radar examples/demo-buggy-app --format text",
+    "ops:demo": "node bin/lwc.js ops-check examples/ops-report/daily_report.csv --rules examples/ops-report/rules.json --history examples/ops-report/history.csv",
+    "check:dist": "npm run build && git diff --exit-code -- dist",
+    "pdf": "node docs/build-pdf.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3"
+  }
+}
