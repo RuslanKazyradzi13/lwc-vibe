@@ -45,7 +45,7 @@ const CATEGORY_ALIASES: Record<string, Category> = {
   e: 'process',
 };
 
-function rootOf(args: ParsedArgs): { root: string; only: string[] } {
+export function rootOf(args: ParsedArgs): { root: string; only: string[] } {
   // lwc radar [path...]: when the first positional is a directory containing .lwc or .git it becomes the root.
   const explicit = str(args.flags, 'root');
   if (explicit) return { root: findRoot(path.resolve(explicit)), only: args.positional };

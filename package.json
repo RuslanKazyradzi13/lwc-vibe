@@ -1,6 +1,6 @@
 {
   "name": "lwc-vibe",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "LWC — vibe (Local Workflow Coach): AI writes, you decide, LWC verifies. A local AI-development coach with Anomaly Radar for Claude Code. EN · RU · KK",
   "license": "MIT",
   "author": "Ruslan Kazyradzi",

@@ -27,6 +27,22 @@
         "src/cli/**"
       ],
       "note": "analyzers do not depend on the CLI"
+    },
+    {
+      "from": "src/gate/**",
+      "deny": [
+        "src/cli/**"
+      ],
+      "note": "the Evidence Gate does not depend on the CLI"
+    },
+    {
+      "from": "src/providers/**",
+      "deny": [
+        "src/cli/**",
+        "src/gate/**",
+        "src/analyzers/**"
+      ],
+      "note": "providers see only the payload, never LWC internals"
     }
   ],
   "thresholds": {

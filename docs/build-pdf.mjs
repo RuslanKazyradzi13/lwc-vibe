@@ -58,6 +58,17 @@ const opsDemo = run(opsArgs);
 const opsRu = run([...opsArgs, '--lang', 'ru']).split('\n').slice(0, 14).join('\n');
 const opsKk = run([...opsArgs, '--lang', 'kk']).split('\n').slice(0, 14).join('\n');
 const help = run(['--help']);
+const gateDemo = run(['gate', 'examples/demo-buggy-app', '--no-journal'])
+  .split(ROOT)
+  .join('<repo>')
+  .split('\n')
+  .filter((l) => !/^(Generated|Reproducibility):/.test(l))
+  .slice(0, 21)
+  .join('\n');
+const gatePreview = run(['gate', 'examples/demo-buggy-app', '--ai-preview'])
+  .split('\n')
+  .slice(0, 34)
+  .join('\n');
 
 const css = `
 @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
@@ -109,7 +120,7 @@ const html = `<!doctype html>
     <ol class="toc">
       <li>Purpose</li><li>Differences from the reference (VibeWise)</li><li>Architecture</li><li>Workflow</li>
       <li>Anomaly Radar</li><li>Anomaly examples</li><li>Severity scale</li><li>Report example with explanations</li>
-      <li>Operational report check (Kazakhstan)</li><li>Installation</li><li>Run example</li><li>Security and limitations</li><li>Licensing</li><li>Roadmap</li>
+      <li>Evidence Gate and the optional Nace advisory</li><li>Operational report check (Kazakhstan)</li><li>Installation</li><li>Run example</li><li>Security and limitations</li><li>Licensing</li><li>Roadmap</li>
     </ol>
     <p class="small">Reports are available in English, Russian and Kazakh. Қазақ тілі толық қолдау табады (ә, ғ, қ, ң, ө, ұ, ү, һ, і). Русский и казахский — полные каталоги сообщений.</p>
   </div>
@@ -177,24 +188,38 @@ const html = `<!doctype html>
 <p><b>How to read it:</b> the first line is the severity, identifier and title; <i>Where</i> — file and line; <i>Observation</i> — the fact (a quote); <i>Status</i> and <i>Source</i> — how well the finding is confirmed and where it came from; <i>Evidence</i> — a link to the run record; <i>Recommended fix</i> — what to do. The Markdown and JSON formats additionally include the plain-language explanation, the possible consequence and how to verify.</p>
 <figure>${svg('anomaly-report.svg')}<figcaption>Figure 4. A styled fragment of the same report (in the text above the repository path is replaced with &lt;repo&gt;).</figcaption></figure>
 
-<h2 class="pb">9. Operational report check (Kazakhstan)</h2>
+<h2 class="pb">9. Evidence Gate and the optional Nace advisory</h2>
+<p>An agent's "done, tests pass" is a claim, not a fact. <code>lwc gate</code> checks whether the recorded facts support it <b>for the code as it is now</b>. Every <code>lwc run</code> stores a fingerprint of the working tree, so a test run made before the latest edit is <i>stale</i> and proves nothing. Claims are matched to the evidence they need. Security and requirement claims are marked as not verifiable automatically. Five checks give the verdict <b>PASS</b>, <b>INSUFFICIENT EVIDENCE</b> or <b>FAIL</b>, with exit codes for CI.</p>
+<table><tr><th>Check</th><th>fail</th><th>gap</th></tr>
+<tr><td>GATE-TESTS</td><td>the latest test run failed</td><td>no run or a stale run while tests are required</td></tr>
+<tr><td>GATE-CLAIMS</td><td>a claim is contradicted</td><td>a claim is unsupported, stale or unverifiable</td></tr>
+<tr><td>GATE-FINDINGS</td><td>a confirmed Critical/High finding</td><td>a Critical/High finding that needs manual verification</td></tr>
+<tr><td>GATE-DECISIONS</td><td>—</td><td>unconfirmed decisions at the build/review stage</td></tr>
+<tr><td>GATE-ANALYZERS</td><td>—</td><td>an analyzer crashed</td></tr></table>
+<p>Real output on the demo project (the claim "Implemented, tests pass" was recorded after a failing run):</p>
+<pre>${esc(gateDemo.trim())}</pre>
+<p><b>Nace Drex (optional).</b> With <code>--ai nace</code> and the <code>NACE_API_KEY</code> environment variable, LWC asks Nace's decision model to triage the findings and rate overall readiness. It uses one documented endpoint, <code>POST /v1/systemone</code>, over plain <code>fetch</code>. The answer is shown in a separate "AI advisory (not evidence)" section. It is computed after the verdict and cannot change it. Only redacted metadata is sent, never source code or command output. <code>--ai-preview</code> prints the payload without sending it:</p>
+<pre class="light">${esc(gatePreview.trim())}</pre>
+<div class="note">The Nace integration follows the official API reference and is covered by tests against mocked responses. As of ${DATE} no call to the real Nace API has been made, because no key was available. docs/NACE.md lists what still has to be checked with a real account.</div>
+
+<h2 class="pb">10. Operational report check (Kazakhstan)</h2>
 <p>Scenario "anomalies in a daily operational report": a synthetic report of a pickup-point network for one day, amounts in tenge. The rules are JSON and can be adapted per organisation; the historical spike is computed from a history file and a configurable threshold and has the status "probable issue", not an error. Real output:</p>
 <pre class="light">${esc(opsDemo.trim())}</pre>
 <p>The same report in Russian (<code>--lang ru</code>) and Kazakh (<code>--lang kk</code>):</p>
 <pre class="light">${esc(opsRu.trim())}</pre>
 <pre class="light">${esc(opsKk.trim())}</pre>
 
-<h2 class="pb">10. Installation</h2>
+<h2 class="pb">11. Installation</h2>
 <p><b>Requirements:</b> Node.js 20 or newer; Git — for category E rules and ARCH-005.</p>
 <p><b>Claude Code plugin</b> (inside a Claude Code session, one command at a time):</p>
 <pre class="light">/plugin marketplace add RuslanKazyradzi13/lwc-vibe
 /plugin install lwc-vibe@lwc-vibe</pre>
 <p><b>CLI:</b></p>
 <pre class="light">npm install -g github:RuslanKazyradzi13/lwc-vibe
-lwc --version      # 0.1.0</pre>
+lwc --version      # ${VERSION}</pre>
 <p>Or from a clone: <code>git clone … && cd lwc-vibe && npm install && npm link</code>. Updating: <code>git pull</code> in the clone, or <code>claude plugin marketplace update lwc-vibe</code> and <code>claude plugin update lwc-vibe@lwc-vibe</code>.</p>
 
-<h2>11. Run example</h2>
+<h2>12. Run example</h2>
 <pre class="light">cd my-project
 lwc init --lang en --level beginner
 lwc task start "Staff discount 20 %" --scope "src/services/**,tests/**"
@@ -205,26 +230,31 @@ lwc task stage build
 lwc run -- npm test           # the run is recorded in .lwc/evidence/
 lwc claim add "Implemented, tests pass"
 lwc radar --run-tests --format md --out .lwc/reports/review.md
+lwc gate                      # is claim C1 backed by a run on the current code?
 lwc task finish</pre>
 <p>CLI help:</p>
 <pre class="light">${esc(help.trim())}</pre>
 
-<h2 class="pb">12. Security and limitations</h2>
+<h2 class="pb">13. Security and limitations</h2>
 <ul>
-<li>Everything runs locally: no network, telemetry, accounts or paid backend. Project commands are executed only on explicit request.</li>
+<li>Everything runs locally: no telemetry, accounts or paid backend. The only possible network call is the optional Nace advisory, made only when enabled and with <code>NACE_API_KEY</code> set. API keys are never read from config files. Project commands are executed only on explicit request.</li>
+<li>An AI answer never counts as evidence. "Nace found no risk" is never reported as secure.</li>
 <li>Hooks never block the session on error; the guard hook asks by default rather than blocking.</li>
 <li><code>.lwc/</code> files contain fragments of code and command output — they are project working files.</li>
 <li>Category A, C and D rules are regular-expression heuristics, not AST analysis: misses and false positives are possible; the finding status reflects this.</li>
 <li>Code is analysed for JavaScript/TypeScript and Python; other languages — secrets and configuration only. The import graph does not know path aliases or monorepos.</li>
 <li>Only the Claude Code integration is tested. Other agents are not claimed.</li>
+<li>Claim classification is keyword-based (English, Russian, Kazakh). Run freshness needs git; without it, freshness is reported as unknown.</li>
 </ul>
 <div class="note">LWC — vibe does not claim compliance with the legislation of the Republic of Kazakhstan or any other country and does not check it. If a project processes personal or financial data, study the primary sources and record the date of the check. As of ${DATE} the authors have not performed a legal review.</div>
 
-<h2>13. Licensing</h2>
+<h2>14. Licensing</h2>
 <p>LWC — vibe code is distributed under the MIT licence (© 2026 Ruslan Kazyradzi). There are no runtime dependencies; development dependencies are TypeScript (Apache-2.0), Prettier (MIT) and @types/node (MIT). The VibeWise reference (MIT, Noah Kim) was studied as a product idea; its materials were not copied. The full list is in THIRD_PARTY_NOTICES.md.</p>
 
-<h2>14. Roadmap</h2>
+<h2>15. Roadmap</h2>
 <ol>
+<li>The Evidence Gate as a GitHub Action posting its Markdown report to pull requests; gate history per task and per agent.</li>
+<li>Nace Perception for extracting acceptance criteria from requirement documents.</li>
 <li>AST analyzers for JS/TS based on the TypeScript Compiler API — fewer false positives, more rules.</li>
 <li>A PostToolUse hook that records test runs from Bash into <code>.lwc/evidence/</code> automatically.</li>
 <li>Path aliases and monorepos in the import graph; SARIF export for GitHub Code Scanning.</li>

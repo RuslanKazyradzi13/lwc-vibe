@@ -24,7 +24,7 @@ lwc-vibe/
 │   ├── cli/                  argument parsing and commands
 │   │   ├── args.ts
 │   │   ├── main.ts
-│   │   └── commands/{session,radar}.ts
+│   │   └── commands/{session,radar,gate}.ts
 │   ├── core/
 │   │   ├── findings.ts       Finding/Analyzer/LwcConfig types, severity, ids
 │   │   ├── radar.ts          orchestrator: scan → analyzers → suppressions → report
@@ -33,9 +33,12 @@ lwc-vibe/
 │   │   ├── scan.ts           file walk, filters, lwc-ignore
 │   │   ├── graph.ts          JS/TS/Python import graph, cycles (Tarjan), exports
 │   │   ├── git.ts            git status / git show HEAD:file
+│   │   ├── fingerprint.ts    working-tree fingerprint: which code state a run happened on
 │   │   ├── glob.ts           glob → RegExp without dependencies
 │   │   └── text.ts           Unicode word boundaries for Cyrillic
 │   ├── analyzers/            A–E: requirements, architecture, implementation, security, process, tests-runner
+│   ├── gate/                 Evidence Gate: claims.ts, gate.ts, payload.ts, report.ts, types.ts
+│   ├── providers/            optional AI advisory providers: types.ts, nace.ts (Nace Drex)
 │   ├── ops/opscheck.ts       operational report checks (CSV/JSON + JSON rules)
 │   ├── i18n/{ru,kk,en}.ts    rule and UI text catalogs
 │   └── index.ts              public API
@@ -59,6 +62,8 @@ lwc-vibe/
 | Analyzers | one per category; pure functions from `AnalyzerContext` to `Finding[]` | scan, graph, git, state, i18n |
 | Report | deterministic rendering; grouping by category, sorting by severity | i18n |
 | Ops | CSV/JSON parsing, rules, explanations | i18n |
+| Gate (`gate/`) | claims vs evidence, run freshness, five checks, verdict, reproducibility metadata, advisory payload | radar, state, fingerprint, i18n |
+| Providers (`providers/`) | optional AI advisory behind the `AdvisoryProvider` interface; Nace Drex over `fetch` | config and payload types only |
 | Hooks | Claude Code integration; never break the session (error → silence) | dist/core/state |
 | Skills | agent behaviour per mode; reference `docs/PROCESS.md` | CLI |
 
@@ -90,6 +95,16 @@ finding and the other analyzers keep running). An analyzer does not execute comm
 `allowRunCommands` is true. Findings are created through `mk()`, which guarantees that all fields are
 filled from the i18n catalog and that the id is stable.
 
+## Evidence Gate isolation
+
+`runGate` (`src/gate/gate.ts`) computes all checks and the verdict first, from radar findings,
+evidence records, the working-tree fingerprint and the session. Only then is the advisory payload
+built (`src/gate/payload.ts`), from the finished report rather than the repository, and handed to
+the provider. The provider's result is written to `report.advisory` and nowhere else. A provider
+that throws, times out or answers nonsense yields an advisory status, never an exception. The
+tests compare the deterministic part of the report with and without a provider. See
+[EVIDENCE_GATE.md](EVIDENCE_GATE.md) and [NACE.md](NACE.md).
+
 ## Finding format
 
 See [REPORT_FORMAT.md](REPORT_FORMAT.md). Key point: `id` = `<RULE>-<fnv1a(file|line|vars)>` — stable
@@ -103,9 +118,10 @@ between runs and independent of the report language, so a specific finding can b
 | `session.json` | JSON | `task: {id, title, startedAt, stage, scope[], decisions[{id,text,proposedAt,confirmedAt?,confirmedBy?}], claims[{id,text,at,evidence?}], baselineChanged[]}`, `history[]` |
 | `journal.md` | Markdown | `## <heading>` entries with timestamps: initialisation, decisions, stages, runs, reports, suppressions |
 | `project-map.md` | Markdown | map: purpose, structure, most depended-on modules, boundaries, unknowns |
-| `evidence/<id>.json` | JSON | `command, cwd, startedAt, durationMs, exitCode, stdoutTail, stderrTail, outputSha256, kind` |
+| `evidence/<id>.json` | JSON | `command, cwd, startedAt, durationMs, exitCode, stdoutTail, stderrTail, outputSha256, kind, worktree?{head, digest}` |
 | `suppressions.json` | JSON | `[{match:{id?|rule?,file?}, reason, by?, date}]` |
 | `reports/radar-<ts>.json` | JSON | full radar report |
+| `reports/gate-<ts>.json` | JSON | full Evidence Gate report (`lwc-gate/1`), including the AI payload that was sent, if any |
 
 `lwc.config.json` in the project root is the same JSON as `config.json`, but kept in Git and shared by
 the team (organisation rules, boundaries, thresholds). The personal `.lwc/config.json` is layered on top.
@@ -122,10 +138,11 @@ the team (organisation rules, boundaries, thresholds). The personal `.lwc/config
 
 ## Tests
 
-`npm test` = build + `node --test` over `tests/*.test.mjs` (49 tests): unit tests (glob, graph,
+`npm test` = build + `node --test` over `tests/*.test.mjs` (75 tests): unit tests (glob, graph,
 text), analyzers on synthetic projects in temporary directories (including false-positive and
 clean-project tests), process rules on temporary git repositories, ops-check against an expected
-result, the CLI as a separate process (full workflow), hooks, i18n catalog integrity, the demo project
+result, the CLI as a separate process (full workflow), the Evidence Gate on temporary git repositories, the
+Nace provider against mocked `fetch` responses (no network), hooks, i18n catalog integrity, the demo project
 against `EXPECTED_FINDINGS.md`.
 
 ## Installation and updates

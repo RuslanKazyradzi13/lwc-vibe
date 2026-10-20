@@ -1,10 +1,12 @@
 import type { Catalog } from './types.js';
+import { GATE_UI } from './gate.js';
 
 /**
  * Қазақ тіліндегі каталог. Аудармаларды жақсартуға қош келдіңіз (CONTRIBUTING.md).
  */
 export const kk: Catalog = {
   ui: {
+    ...GATE_UI.kk,
     'severity.critical': 'Критикалық',
     'severity.high': 'Жоғары',
     'severity.medium': 'Орташа',

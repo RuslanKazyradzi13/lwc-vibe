@@ -3,7 +3,8 @@
  * (`lwc radar --run-tests`) because it runs a command from the configuration.
  */
 import { spawnSync } from 'node:child_process';
-import { nowId, saveEvidence, sha256 } from '../core/state.js';
+import { worktreeFingerprint } from '../core/fingerprint.js';
+import { loadConfig, nowId, saveEvidence, sha256 } from '../core/state.js';
 import { mk, ruleEnabled } from './base.js';
 export function detectTestCommand(read) {
     const pkg = read('package.json');
@@ -25,7 +26,9 @@ export function detectTestCommand(read) {
     }
     return undefined;
 }
-export function runCommandRecorded(root, command, kind) {
+export function runCommandRecorded(root, command, kind, ignore = loadConfig(root).ignore) {
+    // Fingerprint of the code state the command runs on (taken before it can change anything).
+    const fp = worktreeFingerprint(root, ignore);
     const started = Date.now();
     const r = spawnSync(command, {
         cwd: root,
@@ -48,6 +51,8 @@ export function runCommandRecorded(root, command, kind) {
         outputSha256: sha256(stdout + stderr),
         kind,
     };
+    if (fp)
+        rec.worktree = { head: fp.head, digest: fp.digest };
     return rec;
 }
 export const testsRunnerAnalyzer = {
@@ -64,7 +69,7 @@ export const testsRunnerAnalyzer = {
             ctx.log('tests-runner: test command not detected');
             return out;
         }
-        const rec = runCommandRecorded(ctx.root, command, 'test');
+        const rec = runCommandRecorded(ctx.root, command, 'test', ctx.config.ignore);
         const evidencePath = saveEvidence(ctx.root, rec);
         ctx.log(`tests-runner: ${command} → exit code ${rec.exitCode} in ${rec.durationMs} ms`);
         if (rec.exitCode !== 0) {

@@ -89,7 +89,42 @@ export function mergeConfig(raw, base = structuredClone(DEFAULT_CONFIG)) {
         architectureDocs: Array.isArray(raw.architectureDocs)
             ? uniq([...raw.architectureDocs, ...base.architectureDocs])
             : base.architectureDocs,
+        gate: { ...base.gate, ...(raw.gate ?? {}) },
+        ai: {
+            ...base.ai,
+            ...(raw.ai ?? {}),
+            nace: { ...base.ai.nace, ...(raw.ai?.nace ?? {}) },
+        },
     };
+}
+/** Config keys that must never hold a secret value; LWC refuses to run when they are present. */
+const SECRET_CONFIG_KEYS = /^(?:api[_-]?key|apikey|token|secret|password|authorization)$/i;
+/**
+ * Returns the paths of secret-looking keys in a config object (e.g. `ai.nace.apiKey`).
+ * API keys belong in environment variables, never in a file that may end up in Git.
+ */
+export function findSecretConfigKeys(raw, prefix = '') {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw))
+        return [];
+    const out = [];
+    for (const [k, v] of Object.entries(raw)) {
+        const p = prefix ? `${prefix}.${k}` : k;
+        if (SECRET_CONFIG_KEYS.test(k) && typeof v === 'string' && v.length > 0)
+            out.push(p);
+        else
+            out.push(...findSecretConfigKeys(v, p));
+    }
+    return out;
+}
+/** Secret-looking keys in both config layers, with the file they were found in. */
+export function secretKeysInConfig(root) {
+    const files = [path.join(root, SHARED_CONFIG_FILE), statePaths(root).config];
+    const out = [];
+    for (const f of files) {
+        for (const k of findSecretConfigKeys(readJson(f)))
+            out.push(`${path.relative(root, f).replace(/\\/g, '/')}: ${k}`);
+    }
+    return out;
 }
 export function saveConfig(root, config) {
     // Do not persist the default ignore list again — only user additions.

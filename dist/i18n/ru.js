@@ -1,5 +1,7 @@
+import { GATE_UI } from './gate.js';
 export const ru = {
     ui: {
+        ...GATE_UI.ru,
         'severity.critical': 'Критично',
         'severity.high': 'Высокая',
         'severity.medium': 'Средняя',

@@ -72,3 +72,9 @@ this is a separate section with a warning. An empty `match` suppresses nothing.
 
 `lwc radar` returns 0 when the report was produced; with `--fail-on <severity>` it returns 1 when
 findings at that level or above exist (for CI). Invalid arguments — 2.
+
+## Evidence Gate report
+
+`lwc gate` produces a separate report (schema `lwc-gate/1`) that embeds the radar summary and
+findings next to checks, claims, recorded runs and the optional AI advisory. Its format is described
+in [EVIDENCE_GATE.md](EVIDENCE_GATE.md#report).

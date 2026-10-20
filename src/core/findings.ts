@@ -121,6 +121,43 @@ export interface LwcConfig {
    * edited while the task is not at the build stage. ask — ask the user, deny — block, off — disabled.
    */
   guard: 'ask' | 'deny' | 'off';
+  /** Evidence Gate settings (`lwc gate`). */
+  gate: GateConfig;
+  /** Optional AI advisory provider for the gate. Off by default; never required. */
+  ai: AiConfig;
+}
+
+export interface GateConfig {
+  /**
+   * When a passing test run is required: auto — when source files changed or a claim asserts
+   * tests/completion; always; never.
+   */
+  requireTests: 'auto' | 'always' | 'never';
+}
+
+export interface AiConfig {
+  provider: 'off' | 'nace';
+  /** Request timeout. */
+  timeoutMs: number;
+  /** At most this many findings (most severe first) are sent. */
+  maxFindings: number;
+  /** Send finding file paths (not contents). */
+  includePaths: boolean;
+  /** Send finding observations (redacted). Off by default: observations may quote code. */
+  includeObservations: boolean;
+  /** Send redacted excerpts of the requirement files. Off by default. */
+  includeRequirements: boolean;
+  maxRequirementChars: number;
+  nace: NaceConfig;
+}
+
+export interface NaceConfig {
+  /** API base URL (https; http only for localhost mock servers). */
+  baseUrl: string;
+  /** Drex model id, e.g. drex-latest or a pinned drex-v2.0. The response reports the pinned version. */
+  model: string;
+  /** Name of the environment variable holding the API key. The key itself is never stored in config. */
+  apiKeyEnv: string;
 }
 
 export interface AnalyzerContext {
@@ -172,6 +209,17 @@ export const DEFAULT_CONFIG: LwcConfig = {
   requirementFiles: ['REQUIREMENTS.md', 'SPEC.md', 'docs/REQUIREMENTS.md', '.lwc/task.md'],
   architectureDocs: ['docs/ARCHITECTURE.md', 'ARCHITECTURE.md'],
   guard: 'ask',
+  gate: { requireTests: 'auto' },
+  ai: {
+    provider: 'off',
+    timeoutMs: 60_000,
+    maxFindings: 40,
+    includePaths: true,
+    includeObservations: false,
+    includeRequirements: false,
+    maxRequirementChars: 4_000,
+    nace: { baseUrl: 'https://console.nace.ai', model: 'drex-latest', apiKeyEnv: 'NACE_API_KEY' },
+  },
 };
 
 /** Deterministic hash (FNV-1a, 32-bit) for stable identifiers. */

@@ -1,7 +1,9 @@
 import type { Catalog } from './types.js';
+import { GATE_UI } from './gate.js';
 
 export const ru: Catalog = {
   ui: {
+    ...GATE_UI.ru,
     'severity.critical': 'Критично',
     'severity.high': 'Высокая',
     'severity.medium': 'Средняя',

@@ -20,7 +20,7 @@ export const ANALYZERS = [
     processAnalyzer,
     testsRunnerAnalyzer,
 ];
-export const VERSION = '0.1.0';
+export const VERSION = '0.2.0';
 export function applySuppressions(findings, sups) {
     const kept = [];
     const suppressed = [];

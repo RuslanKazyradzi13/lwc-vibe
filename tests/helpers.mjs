@@ -49,10 +49,16 @@ export function cleanup(dir) {
   }
 }
 
-/** Runs the CLI as a separate process. */
+/**
+ * Runs the CLI as a separate process. NACE_API_KEY is always removed from the child environment:
+ * tests must never reach the real Nace API, even on a machine where a key is configured.
+ */
 export function lwc(args, cwd) {
+  const env = { ...process.env };
+  delete env.NACE_API_KEY;
   const r = spawnSync(process.execPath, [BIN, ...args], {
     cwd,
+    env,
     encoding: 'utf8',
     windowsHide: true,
   });

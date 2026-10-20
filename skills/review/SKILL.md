@@ -24,7 +24,11 @@ Read [../../docs/PROCESS.md](../../docs/PROCESS.md). Run `lwc task stage review`
    consent. Suppressed findings stay in the report in a separate section.
 5. **Regressions.** If `IMPL-005` shows failing tests, the fix goes through Build, not "as part of
    the review".
-6. **Summary.** A table "Decision / Implemented? / Verified by?". Then the checkpoint
+6. **Evidence Gate.** Run `lwc gate` and show the user the verdict with its three sections as they
+   are. If the verdict is INSUFFICIENT EVIDENCE because a run is stale, rerun the check with
+   `lwc run -- <command>` and record a new claim; never reword a claim to make it pass. If the
+   report has an *AI advisory* section, present it as a recommendation, never as verification.
+7. **Summary.** A table "Decision / Implemented? / Verified by?". Then the checkpoint
    `✦ Checkpoint: Verification — accept the changes?` through AskUserQuestion
    ("Accept", "Rework", "Revert"). On acceptance: `lwc task finish`.
 

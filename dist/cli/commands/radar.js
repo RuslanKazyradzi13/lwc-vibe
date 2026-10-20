@@ -31,7 +31,7 @@ const CATEGORY_ALIASES = {
     proc: 'process',
     e: 'process',
 };
-function rootOf(args) {
+export function rootOf(args) {
     // lwc radar [path...]: when the first positional is a directory containing .lwc or .git it becomes the root.
     const explicit = str(args.flags, 'root');
     if (explicit)

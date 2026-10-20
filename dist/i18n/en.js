@@ -1,5 +1,7 @@
+import { GATE_UI } from './gate.js';
 export const en = {
     ui: {
+        ...GATE_UI.en,
         'severity.critical': 'Critical',
         'severity.high': 'High',
         'severity.medium': 'Medium',

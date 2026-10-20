@@ -12,4 +12,11 @@ export { scanFiles, makeReader, isSourceFile, isTestFile } from './core/scan.js'
 export { loadConfig, mergeConfig, loadSession, loadEvidence, loadSuppressions, findRoot, } from './core/state.js';
 export { describe, ui, catalog, fill } from './i18n/index.js';
 export { mk } from './analyzers/base.js';
+export { worktreeFingerprint, freshnessOf } from './core/fingerprint.js';
+export { findSecretConfigKeys, secretKeysInConfig } from './core/state.js';
+export { runGate, decideVerdict, rulesetDigest } from './gate/gate.js';
+export { classifyClaim, assessClaim } from './gate/claims.js';
+export { buildAdvisoryPayload, redactText } from './gate/payload.js';
+export { renderGate, renderGateMarkdown, renderGateText } from './gate/report.js';
+export { createNaceProvider, parseSystemOneResponse, buildQuestions, validateBaseUrl, NACE_KEY_RE, FINDING_LABELS, OVERALL_LABELS, } from './providers/nace.js';
 export { main } from './cli/main.js';

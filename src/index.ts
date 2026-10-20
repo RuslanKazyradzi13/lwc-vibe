@@ -56,4 +56,32 @@ export {
 } from './core/state.js';
 export { describe, ui, catalog, fill } from './i18n/index.js';
 export { mk } from './analyzers/base.js';
+export { worktreeFingerprint, freshnessOf } from './core/fingerprint.js';
+export type { WorktreeFingerprint, Freshness } from './core/fingerprint.js';
+export type { GateConfig, AiConfig, NaceConfig } from './core/findings.js';
+export { findSecretConfigKeys, secretKeysInConfig } from './core/state.js';
+export { runGate, decideVerdict, rulesetDigest } from './gate/gate.js';
+export type { GateOptions } from './gate/gate.js';
+export type { CheckStatus, EvidenceSummary, GateCheck, GateReport, Verdict } from './gate/types.js';
+export { classifyClaim, assessClaim } from './gate/claims.js';
+export type { ClaimKind, ClaimStatus, ClaimAssessment } from './gate/claims.js';
+export { buildAdvisoryPayload, redactText } from './gate/payload.js';
+export { renderGate, renderGateMarkdown, renderGateText } from './gate/report.js';
+export {
+  createNaceProvider,
+  parseSystemOneResponse,
+  buildQuestions,
+  validateBaseUrl,
+  NACE_KEY_RE,
+  FINDING_LABELS,
+  OVERALL_LABELS,
+} from './providers/nace.js';
+export type {
+  AdvisoryItem,
+  AdvisoryPayload,
+  AdvisoryProvider,
+  AdvisoryResult,
+  AdvisoryStatus,
+  ProviderDeps,
+} from './providers/types.js';
 export { main } from './cli/main.js';

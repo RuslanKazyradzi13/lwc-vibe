@@ -37,6 +37,17 @@ export const DEFAULT_CONFIG = {
     requirementFiles: ['REQUIREMENTS.md', 'SPEC.md', 'docs/REQUIREMENTS.md', '.lwc/task.md'],
     architectureDocs: ['docs/ARCHITECTURE.md', 'ARCHITECTURE.md'],
     guard: 'ask',
+    gate: { requireTests: 'auto' },
+    ai: {
+        provider: 'off',
+        timeoutMs: 60_000,
+        maxFindings: 40,
+        includePaths: true,
+        includeObservations: false,
+        includeRequirements: false,
+        maxRequirementChars: 4_000,
+        nace: { baseUrl: 'https://console.nace.ai', model: 'drex-latest', apiKeyEnv: 'NACE_API_KEY' },
+    },
 };
 /** Deterministic hash (FNV-1a, 32-bit) for stable identifiers. */
 export function fnv1a(input) {

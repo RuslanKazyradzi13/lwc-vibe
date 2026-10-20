@@ -42,6 +42,7 @@ const BOOLEAN_FLAGS = new Set([
   'quiet',
   'no-journal',
   'version',
+  'ai-preview',
 ]);
 
 export function str(

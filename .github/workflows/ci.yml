@@ -34,6 +34,22 @@ jobs:
         run: npm run test:only
       - name: Anomaly Radar on the repository itself (examples/ excluded)
         run: node bin/lwc.js radar --no-journal --fail-on high
+      - name: Evidence Gate on the repository itself (report in the job summary)
+        shell: bash
+        run: |
+          # On one job the gate runs the tests itself and must reach PASS on a fresh run;
+          # elsewhere it only has to avoid FAIL.
+          if [ "${{ matrix.os }}" = "ubuntu-latest" ] && [ "${{ matrix.node }}" = "22" ]; then
+            node bin/lwc.js gate --run-tests --no-journal --format md --out gate.md --fail-on insufficient
+          else
+            node bin/lwc.js gate --no-journal --format md --out gate.md --fail-on fail
+          fi
+          cat gate.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Evidence Gate on the demo project (must be FAIL)
+        shell: bash
+        run: |
+          node bin/lwc.js gate examples/demo-buggy-app --no-journal --format json --out gate-demo.json --fail-on never
+          node -e "const r=require('./gate-demo.json'); if (r.verdict !== 'fail') { console.error('expected FAIL, got ' + r.verdict); process.exit(1) }"
       - name: Anomaly Radar on the demo project (must find the planted defects)
         run: node bin/lwc.js radar examples/demo-buggy-app --no-journal --format json --out radar-demo.json
       - name: Operational report check (demo)
@@ -46,6 +62,8 @@ jobs:
           path: |
             radar-demo.json
             ops-demo.json
+            gate.md
+            gate-demo.json
 
   links-and-assets:
     name: links, SVG and PDF

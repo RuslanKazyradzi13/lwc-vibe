@@ -5,7 +5,7 @@ import path from 'node:path';
 import { makeProject, cleanup, lwc, REPO_ROOT } from './helpers.mjs';
 
 test('cli: help and version', () => {
-  assert.equal(lwc(['--version'], REPO_ROOT).stdout.trim(), '0.1.0');
+  assert.equal(lwc(['--version'], REPO_ROOT).stdout.trim(), '0.2.0');
   const h = lwc(['--help'], REPO_ROOT);
   assert.equal(h.code, 0);
   assert.match(h.stdout, /Anomaly Radar/);

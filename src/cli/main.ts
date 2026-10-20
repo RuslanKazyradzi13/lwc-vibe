@@ -11,6 +11,7 @@ import {
   type Io,
 } from './commands/session.js';
 import { cmdExplain, cmdOpsCheck, cmdRadar, cmdRun, cmdSuppress } from './commands/radar.js';
+import { cmdGate } from './commands/gate.js';
 
 export const HELP = `LWC — vibe ${VERSION} · Local Workflow Coach
 AI writes. You decide. LWC verifies.
@@ -34,6 +35,12 @@ Anomaly Radar
   radar [path...] [--format text|md|json] [--category a,b,c,d,e] [--run-tests] [--out file] [--fail-on high] [--lang ru|kk|en] [--verbose]
   suppress <id | RULE-ID> [--file path] --reason "…" [--by name] | suppress list
   explain <file>                      module relations: what it imports, who imports it
+
+Evidence Gate
+  gate [path] [--format text|md|json] [--out file] [--run-tests] [--fail-on fail|insufficient|never]
+       [--ai nace|off] [--ai-preview] [--lang ru|kk|en]
+                                      is the task really done? checks claims against recorded
+                                      evidence; optional Nace Drex advisory (never part of the verdict)
 
 Operational data
   ops-check <data.csv|json> --rules <rules.json> [--history <history>] [--format text|md|json] [--lang ru|kk|en] [--out file]
@@ -77,6 +84,8 @@ export async function main(
         return cmdRun(args, io);
       case 'radar':
         return await cmdRadar(args, io);
+      case 'gate':
+        return await cmdGate(args, io);
       case 'suppress':
         return cmdSuppress(args, io);
       case 'explain':

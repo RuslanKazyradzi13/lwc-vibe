@@ -61,6 +61,13 @@ const SECRETS: SecretPattern[] = [
   },
 ];
 
+/** Replaces every secret-looking value with [REDACTED] (used before data leaves the machine). */
+export function redactSecrets(text: string): string {
+  let out = text;
+  for (const p of SECRETS) out = out.replace(new RegExp(p.re.source, p.re.flags), '[REDACTED]');
+  return out;
+}
+
 const PLACEHOLDER_RE =
   /(xxx|example|changeme|change_me|placeholder|your[_-]?|<[^>]+>|\$\{|process\.env|os\.environ|getenv|dummy|sample|test[_-]?key|\*\*\*|12345678|password123|secret123)/i;
 

@@ -69,6 +69,11 @@ export interface EvidenceRecord {
   outputSha256: string;
   /** What the run proves (e.g. "npm test"). */
   kind: 'test' | 'lint' | 'build' | 'other';
+  /**
+   * Working-tree fingerprint taken right before the run (see core/fingerprint.ts). Lets the
+   * Evidence Gate tell a run on the current code from a stale one. Absent in older records.
+   */
+  worktree?: { head: string | null; digest: string };
 }
 
 export interface Suppression {
@@ -168,7 +173,42 @@ export function mergeConfig(
     architectureDocs: Array.isArray(raw.architectureDocs)
       ? uniq([...raw.architectureDocs, ...base.architectureDocs])
       : base.architectureDocs,
+    gate: { ...base.gate, ...(raw.gate ?? {}) },
+    ai: {
+      ...base.ai,
+      ...(raw.ai ?? {}),
+      nace: { ...base.ai.nace, ...(raw.ai?.nace ?? {}) },
+    },
   };
+}
+
+/** Config keys that must never hold a secret value; LWC refuses to run when they are present. */
+const SECRET_CONFIG_KEYS = /^(?:api[_-]?key|apikey|token|secret|password|authorization)$/i;
+
+/**
+ * Returns the paths of secret-looking keys in a config object (e.g. `ai.nace.apiKey`).
+ * API keys belong in environment variables, never in a file that may end up in Git.
+ */
+export function findSecretConfigKeys(raw: unknown, prefix = ''): string[] {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return [];
+  const out: string[] = [];
+  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+    const p = prefix ? `${prefix}.${k}` : k;
+    if (SECRET_CONFIG_KEYS.test(k) && typeof v === 'string' && v.length > 0) out.push(p);
+    else out.push(...findSecretConfigKeys(v, p));
+  }
+  return out;
+}
+
+/** Secret-looking keys in both config layers, with the file they were found in. */
+export function secretKeysInConfig(root: string): string[] {
+  const files = [path.join(root, SHARED_CONFIG_FILE), statePaths(root).config];
+  const out: string[] = [];
+  for (const f of files) {
+    for (const k of findSecretConfigKeys(readJson<unknown>(f)))
+      out.push(`${path.relative(root, f).replace(/\\/g, '/')}: ${k}`);
+  }
+  return out;
 }
 
 export function saveConfig(root: string, config: LwcConfig): void {

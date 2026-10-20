@@ -3,6 +3,6 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
-# Локальный контекст LWC в самом репозитории не храним (кроме демонстрационных примеров)
+# LWC working state of this repository itself is not committed (the demo examples keep theirs)
 /.lwc/
 docs/pdf-build/
